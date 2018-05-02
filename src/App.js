@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
+import { Route, Link } from 'react-router-dom'
 
 import './App.css'
 
 class App extends Component {
   render() {
-    const name = 'world'
-
     return (
-      <div>{ name }</div>
+      <div className="App">
+      </div>
     )
   }
 }
