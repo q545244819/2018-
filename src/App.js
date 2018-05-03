@@ -56,17 +56,15 @@ class App extends Component {
             </Menu>
           </Header>
           <Content>
-            <div className="container">
-              <Switch>
-                { routes.map((item, index) => {
-                  if (!index) {
-                    return <Route exact key={ item.key } path={ item.path } component={ item.component }/>
-                  } else {
-                    return <Route key={ item.key } path={ item.path } component={ item.component }/>
-                  }
-                }) }
-              </Switch>
-            </div>
+            <Switch>
+              { routes.map((item, index) => {
+                if (!index) {
+                  return <Route exact key={ item.key } path={ item.path } component={ item.component }/>
+                } else {
+                  return <Route key={ item.key } path={ item.path } component={ item.component }/>
+                }
+              }) }
+            </Switch>
           </Content>
           <Footer className="Footer">
             <p>Power by React and NodeJS!</p>

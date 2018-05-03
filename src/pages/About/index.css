@@ -1,0 +1,15 @@
+.About > .cover {
+  width: 100%;
+  height: auto;
+}
+
+.About > .info {
+  margin: 0 auto;
+  padding: 15px 0;
+  width: 600px;
+  font-size: 16px;
+}
+
+.About > .info ul {
+  padding-left: 20px;
+}
