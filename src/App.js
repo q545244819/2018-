@@ -39,7 +39,7 @@ const routes = [
   {
     path: '/about',
     key: 'about',
-    name: '关于我们',
+    name: '关于',
     component: About,
   },
 ]

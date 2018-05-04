@@ -23,7 +23,7 @@ class Home extends Component {
               <h2>后端技术：</h2>
               <ul>
                 <li>NodeJS</li>
-                <li>FastJS</li>
+                <li>Fastify</li>
                 <li>Mongodb</li>
                 <li>Mongorito</li>
               </ul>

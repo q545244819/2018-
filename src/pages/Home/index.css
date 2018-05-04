@@ -1,0 +1,75 @@
+.Home .list {
+  margin: 0;
+  padding: 0 25px 0 0;
+  list-style-type: none;
+}
+
+.Home .list > li > a:focus {
+  outline: none;
+  border-color: #fff;
+}
+
+.Home .list > li:hover h1 {
+  color: #1890ff;
+}
+
+.Home .list h1,
+.Home .list p.detail {
+  cursor: pointer;
+  transition: all .3s;
+}
+
+.Home .list h1 {
+  font-size: 26px;
+  line-height: 1.3;
+}
+
+.Home .cover {
+  margin-bottom: 10px;
+  display: block;
+  width: 100%;
+  height: 200px;
+  border-radius: 5px;
+}
+
+.Home .list p.detail {
+  font-size: 16px;
+  font-style: italic;
+  color: #a3a3a3;
+}
+
+.Home .list p.info {
+  font-size: 16px;
+  font-style: italic;  
+  color: #ccc;
+}
+
+.Home .tags-wrap > span {
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+.Home .tags-wrap > span:hover > sup {
+  background-color: #1890ff;
+  color: #fff;
+  box-shadow: 0 0 0 1px #1890ff inset;
+}
+
+.Home .tags-wrap sup {
+  transition: all .3s;
+  background-color: #fff;
+  color: #999;
+  box-shadow: 0 0 0 1px #d9d9d9 inset;
+}
+
+.Home .avatar {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.Home .background {
+  margin-top: 15px;
+  line-height: 1.8;
+}
