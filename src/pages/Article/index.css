@@ -1,0 +1,22 @@
+.Article > .cover {
+  width: 100%;
+  height: 350px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.Article > .container {
+  padding: 25px;
+}
+
+.Article > .container > .title,
+.Article > .container > .info {
+ text-align: center;
+}
+
+.Article > .container > .info {
+  font-size: 14px;
+  font-style: italic;
+  color: #ccc;
+}

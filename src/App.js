@@ -6,6 +6,7 @@ import { Layout, Menu } from 'antd'
 import Home from './pages/Home'
 import Album from './pages/Album'
 import About from './pages/About'
+import Article from './pages/Article'
 
 import './App.css'
 
@@ -28,6 +29,11 @@ const routes = [
     key: 'about',
     name: '关于',
     component: About,
+  },
+  {
+    path: '/article/:id',
+    key: 'article',
+    component: Article,
   },
   {
     path: '/:id',

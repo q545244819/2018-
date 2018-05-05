@@ -49,7 +49,7 @@ class Home extends Component {
                 { this.state.list.map((item, index) => {
                   return (
                     <li key={ item.id }>
-                      <Link to={`/menu/${ item.id }`}>
+                      <Link to={`/article/${ item.id }`}>
                         <h1>{ item.title }</h1>
                         <img className="cover" src={ item.cover } alt={ item.title } />
                         <p className="detail">{ item.detail }</p>
