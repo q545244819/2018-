@@ -43,7 +43,7 @@ class App extends Component {
         <Layout className="Layout">
           <Header className="Header">
             <div className="logo">衛宮さんちの今日のごはん</div>
-            <Menu className="menu" mode="horizontal" defaultSelectedKeys={['home']}>
+            <Menu className="menu" mode="horizontal" defaultSelectedKeys={[ 'home' ]}>
               { routes.map((item, index) => {
                 if (item.name) {
                   return <Menu.Item key={ item.key }><Link to={ item.path }>{ item.name }</Link></Menu.Item>
