@@ -4,7 +4,8 @@
   list-style-type: none;
 }
 
-.Home .list > li > a:focus {
+.Home .list > li > a:focus
+.Home .list > li > a:active {
   outline: none;
   border-color: #fff;
 }
