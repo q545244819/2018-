@@ -1,5 +1,5 @@
 .Home .list {
-  margin: 0;
+  margin: 25px 0 0 0;
   padding: 0 25px 0 0;
   list-style-type: none;
 }
@@ -44,9 +44,10 @@
   color: #ccc;
 }
 
-.Home .tags-wrap > span {
+.Home .tags-wrap > a {
   cursor: pointer;
   margin-right: 15px;
+  margin-bottom: 15px;
 }
 
 .Home .tags-wrap > span:hover > sup {

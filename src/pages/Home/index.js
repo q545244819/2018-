@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Pagination, Row, Col, Divider, Badge } from 'antd'
+import { Pagination, Row, Col, Divider, Badge, Breadcrumb, Icon } from 'antd'
 
 import './index.css'
 
@@ -11,6 +11,10 @@ class Home extends Component {
         <div className="container">
           <Row>
             <Col span={18}>
+              <Breadcrumb>
+                <Breadcrumb.Item><Icon type="home" />首页</Breadcrumb.Item>
+                { this.props.match.params.id ? <Breadcrumb.Item><a href={`${this.props.match.params.id}`}>test</a></Breadcrumb.Item> : null }
+              </Breadcrumb>
               <ul className="list">
                 <li>
                   <Link to="/">
@@ -27,11 +31,7 @@ class Home extends Component {
               <Divider />
               <h2>美食标签</h2>
               <div className="tags-wrap">
-                <Badge count="粤菜" />
-                <Badge count="粤菜" />
-                <Badge count="粤菜" />
-                <Badge count="粤菜" />
-                <Badge count="粤菜" />
+                <Link to="/123"><Badge count="粤菜" /></Link>
               </div>
               <Divider />
               <h2>站长</h2>

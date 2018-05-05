@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
+import { TransitionGroup, CSSTransition } from "react-transition-group"
 import { Switch, Route, Link } from 'react-router-dom'
 import { Layout, Menu } from 'antd'
 
 import Home from './pages/Home'
-import Discover from './pages/Discover'
+import Album from './pages/Album'
 import About from './pages/About'
-import CMenu from './pages/Menu'
-import Video from './pages/Video'
 
 import './App.css'
 
@@ -15,32 +14,25 @@ const routes = [
   {
     path: '/',
     key: 'home',
-    name: '首页',
+    name: '菜谱',
     component: Home,
   },
   {
-    path: '/menu',
-    key: 'menu',
-    name: '菜谱',
-    component: CMenu,
-  },
-  {
-    path: '/discover',
-    key: 'discover',
-    name: '发现',
-    component: Discover,
-  },
-  {
-    path: '/video',
-    key: 'video',
-    name: '视频',
-    component: Video,
+    path: '/album',
+    key: 'album',
+    name: '图册',
+    component: Album,
   },
   {
     path: '/about',
     key: 'about',
     name: '关于',
     component: About,
+  },
+  {
+    path: '/:id',
+    key: 'tag',
+    component: Home,
   },
 ]
 
@@ -52,19 +44,29 @@ class App extends Component {
           <Header className="Header">
             <div className="logo">衛宮さんちの今日のごはん</div>
             <Menu className="menu" mode="horizontal" defaultSelectedKeys={['home']}>
-              { routes.map((item, index) => <Menu.Item key={ item.key }><Link to={ item.path }>{ item.name }</Link></Menu.Item>) }
+              { routes.map((item, index) => {
+                if (item.name) {
+                  return <Menu.Item key={ item.key }><Link to={ item.path }>{ item.name }</Link></Menu.Item>
+                } else {
+                  return null
+                }
+              }) }
             </Menu>
           </Header>
           <Content>
-            <Switch>
-              { routes.map((item, index) => {
-                if (!index) {
-                  return <Route exact key={ item.key } path={ item.path } component={ item.component }/>
-                } else {
-                  return <Route key={ item.key } path={ item.path } component={ item.component }/>
-                }
-              }) }
-            </Switch>
+            <TransitionGroup>
+              <CSSTransition classNames="fade" timeout={300}>
+                <Switch>
+                  { routes.map((item, index) => {
+                    if (!index) {
+                      return <Route exact key={ item.key } path={ item.path } component={ item.component }/>
+                    } else {
+                      return <Route key={ item.key } path={ item.path } component={ item.component }/>
+                    }
+                  }) }
+                </Switch>
+              </CSSTransition>
+            </TransitionGroup>
           </Content>
           <Footer className="Footer">
             <p>Power by React and NodeJS!</p>
