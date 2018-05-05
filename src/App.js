@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { TransitionGroup, CSSTransition } from "react-transition-group"
-import { Switch, Route, Link } from 'react-router-dom'
+import { AnimatedSwitch } from 'react-router-transition'
+import { Route, Link } from 'react-router-dom'
 import { Layout, Menu } from 'antd'
 
 import Home from './pages/Home'
@@ -60,19 +60,15 @@ class App extends Component {
             </Menu>
           </Header>
           <Content>
-            <TransitionGroup>
-              <CSSTransition classNames="fade" timeout={300}>
-                <Switch>
-                  { routes.map((item, index) => {
-                    if (!index) {
-                      return <Route exact key={ item.key } path={ item.path } component={ item.component }/>
-                    } else {
-                      return <Route key={ item.key } path={ item.path } component={ item.component }/>
-                    }
-                  }) }
-                </Switch>
-              </CSSTransition>
-            </TransitionGroup>
+            <AnimatedSwitch atEnter={{ opacity: 0 }} atLeave={{ opacity: 0 }} atActive={{ opacity: 1 }}>
+                { routes.map((item, index) => {
+                  if (!index) {
+                    return <Route exact key={ item.key } path={ item.path } component={ item.component }/>
+                  } else {
+                    return <Route key={ item.key } path={ item.path } component={ item.component }/>
+                  }
+                }) }
+              </AnimatedSwitch>
           </Content>
           <Footer className="Footer">
             <p>Power by React and NodeJS!</p>
