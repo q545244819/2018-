@@ -49,19 +49,12 @@ class ArticleRoute {
     try {
       const body = request.body
 
-      if (body) {
-        await Tag.findOneAndUpdate({ _id: ObjectId(request.params.id) }, body)
+      await Tag.findOneAndUpdate({ _id: ObjectId(request.params.id) }, body)
 
-        reply.code(200).send({
-          statusCode: 200,
-          message: '更新标签成功！',
-        })
-      } else {
-        reply.code(500).send({
-          statusCode: 500,
-          message: '更新标签数据不能为空！',
-        })
-      }
+      reply.code(200).send({
+        statusCode: 200,
+        message: '更新标签成功！',
+      })
     } catch(e) {
       reply.code(500).send({
         statusCode: 500,
