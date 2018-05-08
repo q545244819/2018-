@@ -10,7 +10,7 @@ const routePrefix = '/api'
 const routeArticle = `${ routePrefix }/article`
 const routeTag = `${ routePrefix }/tag`
 
-fastify.get(`${ routeArticle }`, articleRoute.find)
+fastify.get(`${ routeArticle }/`, articleRoute.find)
 fastify.get(`${ routeArticle }/:id`, articleRoute.findOne)
 fastify.post(`${ routeArticle }/`, articleRoute.create)
 fastify.put(`${ routeArticle }/:id`, articleRoute.update)
