@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongorito')
 
 const Article = require('../models/article')
+const Tag = require('../models/tag')
 
 class ArticleRoute {
   static async create(request, reply) {
@@ -28,11 +29,31 @@ class ArticleRoute {
       const amount = 10
       const articles = await Article.skip((query.page - 1) * amount).limit(amount).sort('created_at', 'desc').find()
       const articlesCount = await Article.count()
+      let tagArray = []
+
+      articles.forEach((item) => tagArray = tagArray.concat(item.get('tags')))
+
+      const tags = await Tag.where('_id').in([...new Set(tagArray)].map((item) => ObjectId(item))).find()
+      const tagMap = {}
+
+      tags.forEach((item) => tagMap[item.get('_id')] = item )
+
+      const list = []
+
+      articles.forEach((item) => {
+        let tags = []
+
+        item.get('tags').forEach((tag) => tags.push((tagMap[tag])))
+
+        item.set('tags', tags)
+
+        list.push(item)
+      })
 
       reply.code(200).send({
         current: parseInt(query.page),
         count: articlesCount,
-        list: articles,
+        list,
       })
     } catch(e) {
       console.log(e)
@@ -48,12 +69,21 @@ class ArticleRoute {
     try {
       const article = await Article.findOne({ _id: ObjectId(request.params.id) })
 
-      if (!tag) {
+      if (!article) {
         throw Error('not Found!')
       }
 
+      const tags = await Tag.where('_id').in(article.get('tags').map((item) => ObjectId(item))).find()
+      const tagMap = {}
+
+      tags.forEach((item) => tagMap[item.get('_id')] = item )
+
+      article.set('tags', article.get('tags').map((item) => tagMap[item]))
+
       reply.send(article)
     } catch(e) {
+      console.log(e)
+
       reply.code(404).send({
         statusCode: 404,
         message: '未找到文章！',
