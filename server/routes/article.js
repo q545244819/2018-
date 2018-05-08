@@ -46,7 +46,11 @@ class ArticleRoute {
 
   static async findOne(request, reply) {
     try {
-      const article = await Article.findOne({ id: ObjectId(request.params.id) })
+      const article = await Article.findOne({ _id: ObjectId(request.params.id) })
+
+      if (!tag) {
+        throw Error('not Found!')
+      }
 
       reply.send(article)
     } catch(e) {
