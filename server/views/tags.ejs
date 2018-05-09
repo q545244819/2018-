@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>admin</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">后台管理系统</a>
+      </div>
+      <div class="container">
+        <ul class="nav navbar-nav">
+            <li><a href="/admin">文章</a></li>
+            <li class="active"><a href="/admin/tags">标签</a></li>
+            <li><a href="#">相册</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container" id="app">
+      <div class="form-inline">
+        <div class="form-group">
+          <label for="title" class="col-sm-4 control-label">标签名称：</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="title" v-model="title" v-bind:disabled="disabled">
+          </div>
+        </div>
+        <button type="button" class="btn btn-default" v-bind:disabled="disabled" @click="create">创建</button>
+      </div>
+      <hr>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>标题</th>
+            <th>创建日期</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, key) in list" :key="key">
+            <td>
+              <div class="form-group">
+                <input type="text" v-model="item.title" class="form-control">
+              </div>
+            </td>
+            <td v-text="item.created_at"></td>
+            <td>
+              <button type="button" class="btn btn-success" @click="update(item)">保存</button>
+              <button type="button" class="btn btn-danger" @click="remove(item._id)">删除</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.min.js"></script>
+    <script>
+      new Vue({
+        el: '#app',
+        data: {
+          list: [],
+          title: '',
+          disabled: false,
+        },
+        methods: {
+          load(page) {
+            this.page = page
+
+            axios.get('/api/tag')
+              .then(({ data }) => {
+                this.list = data
+              })
+          },
+          update(item) {
+            if (confirm('是否更新此标签？')) {
+              axios.put(`/api/tag/${ item._id }`, { title: item.title })
+                .then(({ data }) => {
+                })
+            }
+          },
+          remove(id) {
+            if (confirm('是否删除此标签？')) {
+              axios.delete(`/api/tag/${ id }`)
+                .then(({ data }) => {
+                  this.load()
+                })
+            }
+          },
+          create() {
+            this.disabled = true
+
+            axios.post(`/api/tag`, { title: this.title })
+              .then(({ data }) => {
+                this.disabled = false
+                this.title = ''
+                this.load()
+              })
+              .catch(() => {
+                this.disabled = false
+              })
+          },
+        },
+        mounted() {
+          this.load()
+        },
+      })
+    </script>
+  </body>
+</html>

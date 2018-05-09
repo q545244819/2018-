@@ -94,8 +94,11 @@ class ArticleRoute {
   static async update(request, reply) {
     try {
       const body = request.body
+      const article = await Article.findOne({ _id: ObjectId(request.params.id) })
 
-      await Article.findOneAndUpdate({ _id: ObjectId(request.params.id) }, body)
+      article.set(body)
+
+      await article.save()
 
       reply.code(200).send({
         statusCode: 200,
@@ -111,7 +114,7 @@ class ArticleRoute {
   
   static async delete(request, reply) {
     try {
-      await Article.findOneAndRemove({ _id: ObjectId(request.params.id) })
+      await Article.remove({ _id: ObjectId(request.params.id) })
 
       reply.code(200).send({
         statusCode: 200,
