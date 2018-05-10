@@ -37,14 +37,12 @@ fastify.get(`${ routeAdmin }/create`, { beforeHandler: auth }, adminRoute.articl
 fastify.get(`${ routeAdmin }/update/:id`, { beforeHandler: auth }, adminRoute.article)
 
 fastify.get(`${ routeArticle }`, articleRoute.find)
-fastify.get(`${ routeArticle }/`, articleRoute.find)
 fastify.get(`${ routeArticle }/:id`, articleRoute.findOne)
 fastify.post(`${ routeArticle }`, { schema: articleSchema.create, beforeHandler: auth }, articleRoute.create)
 fastify.put(`${ routeArticle }/:id`, { schema: articleSchema.update, beforeHandler: auth }, articleRoute.update)
 fastify.delete(`${ routeArticle }/:id`, { schema: articleSchema.delete, beforeHandler: auth }, articleRoute.delete)
 
 fastify.get(`${ routeTag }`, tagRoute.find)
-fastify.get(`${ routeTag }/`, tagRoute.find)
 fastify.get(`${ routeTag }/:id`, tagRoute.findOne)
 fastify.post(`${ routeTag }`, { schema: tagSchema.create, beforeHandler: auth }, tagRoute.create)
 fastify.put(`${ routeTag }/:id`, { schema: tagSchema.update, beforeHandler: auth }, tagRoute.update)

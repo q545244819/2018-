@@ -18,7 +18,7 @@ class ArticleRoute {
     } catch(e) {
       reply.code(500).send({
         statusCode: 500,
-        message: '新建标签失败！',
+        message: '新建文章失败！',
       })
     }
   }

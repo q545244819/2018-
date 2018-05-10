@@ -8,8 +8,6 @@ module.exports = async (request, reply, next) => {
 
     try {
       await request.jwtVerify()
-    
-      next()
     } catch(e) {
       reply.code(301).redirect('/admin/login')
     }
