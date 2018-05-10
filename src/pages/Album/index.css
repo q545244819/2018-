@@ -1,0 +1,16 @@
+.grid-sizer,
+.grid-item {
+  width: 33.333%;
+}
+
+.grid-item {
+  float: left;
+  margin-bottom: 15px;
+}
+
+.grid-item img {
+  box-sizing: border-box;
+  display: block;
+  padding-right: 10px;
+  max-width: 100%;
+}

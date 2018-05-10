@@ -67,7 +67,7 @@ class Home extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     const query = queryString.parse(nextProps.location.search)
 
-    if (query.tag != this.state.tag) {
+    if (query.tag !== this.state.tag) {
       this.load()
     }
 

@@ -73,8 +73,6 @@ class ArticleRoute {
         list,
       })
     } catch(e) {
-      console.log(e)
-
       reply.code(404).send({
         statusCode: 404,
         message: '文章列表为空！',
@@ -104,6 +102,19 @@ class ArticleRoute {
       reply.code(404).send({
         statusCode: 404,
         message: '未找到文章！',
+      })
+    }
+  }
+
+  static async findCovers(request, reply) {
+    try {
+      const covers = await Article.select('cover').find()
+
+      reply.code(200).send(covers)
+    } catch(e) {
+      reply.code(404).send({
+        statusCode: 404,
+        message: '相册列表为空！',
       })
     }
   }

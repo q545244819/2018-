@@ -37,6 +37,7 @@ fastify.get(`${ routeAdmin }/create`, { beforeHandler: auth }, adminRoute.articl
 fastify.get(`${ routeAdmin }/update/:id`, { beforeHandler: auth }, adminRoute.article)
 
 fastify.get(`${ routeArticle }`, articleRoute.find)
+fastify.get(`${ routeArticle }/cover`, articleRoute.findCovers)
 fastify.get(`${ routeArticle }/:id`, articleRoute.findOne)
 fastify.post(`${ routeArticle }`, { schema: articleSchema.create, beforeHandler: auth }, articleRoute.create)
 fastify.put(`${ routeArticle }/:id`, { schema: articleSchema.update, beforeHandler: auth }, articleRoute.update)
