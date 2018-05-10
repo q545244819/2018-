@@ -78,7 +78,7 @@ class Home extends Component {
                         <h1>{ item.title }</h1>
                         <div className="cover" style={{ backgroundImage: `url(${ item.cover })` }} alt={ item.title }></div>
                         <p className="detail">{ item.detail }</p>
-                        <p className="info">Posted by XXX on { item.date }</p>
+                        <p className="info">Posted by 卫宫士郎 on { item.created_at }</p>
                       </Link>
                     </li>
                   )
