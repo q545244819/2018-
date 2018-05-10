@@ -35,21 +35,25 @@ const routes = [
     key: 'article',
     component: Article,
   },
-  {
-    path: '/:id',
-    key: 'tag',
-    component: Home,
-  },
 ]
+const paths = ['album', 'about']
 
 class App extends Component {
+  constructor() {
+    super()
+    
+    this.state = {
+      path: paths.indexOf(window.location.pathname.slice(1)) > -1 ? window.location.pathname.slice(1) : 'home'
+    }
+  }
+
   render() {
     return (
       <div className="App">
         <Layout className="Layout">
           <Header className="Header">
             <div className="logo">衛宮さんちの今日のごはん</div>
-            <Menu className="menu" mode="horizontal" defaultSelectedKeys={[ 'home' ]}>
+            <Menu className="menu" mode="horizontal" defaultSelectedKeys={[ this.state.path ]}>
               { routes.map((item, index) => {
                 if (item.name) {
                   return <Menu.Item key={ item.key }><Link to={ item.path }>{ item.name }</Link></Menu.Item>

@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Pagination, Row, Col, Divider, Badge, Breadcrumb, Icon } from 'antd'
+import queryString from 'query-string'
 
 import { getArticles } from '../../services/article'
 import { getTag } from '../../services/tag'
+
 
 import './index.css'
 
@@ -17,14 +19,20 @@ class Home extends Component {
       tagsMap: {},
       current: 1,
       total: 0,
+      tag: '',
     }
   }
 
   load() {
+    const query = queryString.parse(this.props.location.search)
     const promises = [
-      getArticles({ page: 1 }),
+      getArticles({ page: query.page || this.state.current, tag: query.tag }),
       getTag(),
     ]
+
+    this.setState({
+      tag: query.tag,
+    })
 
     Promise.all(promises)
       .then((results) => {
@@ -32,7 +40,7 @@ class Home extends Component {
         const tags = results[1].data
         let tagsMap = {}
 
-        tags.forEach((item) => tagsMap[item._id] = item)
+        tags.forEach((item) => tagsMap[item._id] = item.title)
 
         this.setState({
           list,
@@ -56,7 +64,13 @@ class Home extends Component {
     this.load()
   }
 
-  shouldComponentUpdate() {
+  shouldComponentUpdate(nextProps, nextState) {
+    const query = queryString.parse(nextProps.location.search)
+
+    if (query.tag != this.state.tag) {
+      this.load()
+    }
+
     return true
   }
 
@@ -68,7 +82,7 @@ class Home extends Component {
             <Col span={18}>
               <Breadcrumb>
                 <Breadcrumb.Item><Icon type="home" />首页</Breadcrumb.Item>
-                { this.props.match.params.id ? <Breadcrumb.Item><a href={`${this.props.match.params.id}`}>{ this.state.tagsMap[this.props.match.params.id] }</a></Breadcrumb.Item> : null }
+                <Breadcrumb.Item><a href={`?tag=${this.state.tag}`}>{ this.state.tagsMap[this.state.tag] }</a></Breadcrumb.Item>
               </Breadcrumb>
               <ul className="list">
                 { this.state.list.map((item, index) => {
@@ -90,8 +104,9 @@ class Home extends Component {
               <Divider />
               <h2>美食标签</h2>
               <div className="tags-wrap">
+                <Link to='/'><Badge count="全部" /></Link>
                 { this.state.tags.map((item, index) => {
-                  return <Link key={ item._id } to={`/${ item._id }`}><Badge count={ item.title } /></Link>
+                  return <Link key={ item._id } to={`?tag=${ item._id }`}><Badge count={ item.title } /></Link>
                 }) }
               </div>
               <Divider />

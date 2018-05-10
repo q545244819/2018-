@@ -1,3 +1,5 @@
+require("date-format-lite")
+
 const { ObjectId } = require('mongorito')
 
 const Article = require('../models/article')
@@ -27,9 +29,23 @@ class ArticleRoute {
     try {
       const query = request.query
       const amount = 10
-      const articles = await Article.skip((query.page - 1) * amount).limit(amount).sort('created_at', 'desc').find()
       const articlesCount = await Article.count()
+      let articles = null
       let tagArray = []
+
+      if (query.tag) {
+        articles = await Article.where('tags')
+          .in([ query.tag ])
+          .skip((query.page - 1) * amount)
+          .limit(amount)
+          .sort('created_at', 'desc')
+          .find()
+      } else {
+        articles = await Article.skip((query.page - 1) * amount)
+          .limit(amount)
+          .sort('created_at', 'desc')
+          .find()
+      }
 
       articles.forEach((item) => tagArray = tagArray.concat(item.get('tags')))
 
@@ -46,6 +62,7 @@ class ArticleRoute {
         item.get('tags').forEach((tag) => tags.push((tagMap[tag])))
 
         item.set('tags', tags)
+        item.set('created_at', item.get('created_at').format('YYYY-MM-DD hh:mm'))
 
         list.push(item)
       })
