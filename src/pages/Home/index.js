@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Pagination, Row, Col, Divider, Badge, Breadcrumb, Icon } from 'antd'
 
+import { getArticles } from '../../services/article'
+import { getTag } from '../../services/tag'
+
 import './index.css'
 
 class Home extends Component {
@@ -9,30 +12,52 @@ class Home extends Component {
     super()
 
     this.state = {
-      list: [
-        {
-          id: '123',
-          title: '饿了么的 PWA 升级实践',
-          cover: 'http://placehold.it/300x200',
-          detail: '很荣幸在今年 2 月到 5 月的时间里，以顾问的身份加入饿了么，参与 PWA 的相关工作。这篇文章其实最初是在以英文写作发表在 medium 上的：Upgrading Ele.me to Progressive Web Apps，获得了一定的关注。所以也决定改写为中文版本再次分享出来，希望能对你有所帮助 ;) ',
-          date: '2018-01-01',
-        },
-      ],
-      tags: [
-        {
-          id: '123',
-          title: '粤菜',
-        },
-        {
-          id: '321',
-          title: '川菜',
-        },
-      ],
-      tagsMap: {
-        '123': '粤菜',
-        '321': '川菜',
-      }
+      list: [],
+      tags: [],
+      tagsMap: {},
+      current: 1,
+      total: 0,
     }
+  }
+
+  load() {
+    const promises = [
+      getArticles({ page: 1 }),
+      getTag(),
+    ]
+
+    Promise.all(promises)
+      .then((results) => {
+        const { list, current, total } = results[0].data
+        const tags = results[1].data
+        let tagsMap = {}
+
+        tags.forEach((item) => tagsMap[item._id] = item)
+
+        this.setState({
+          list,
+          tags,
+          tagsMap,
+          current,
+          total,
+        })
+      })
+      .catch((err) => {
+      })
+  }
+
+  pageChange(page) {
+    this.setState({
+      current: page,
+    })
+  }
+
+  componentWillMount() {
+    this.load()
+  }
+
+  shouldComponentUpdate() {
+    return true
   }
 
   render() {
@@ -48,10 +73,10 @@ class Home extends Component {
               <ul className="list">
                 { this.state.list.map((item, index) => {
                   return (
-                    <li key={ item.id }>
-                      <Link to={`/article/${ item.id }`}>
+                    <li key={ item._id }>
+                      <Link to={`/article/${ item._id }`}>
                         <h1>{ item.title }</h1>
-                        <img className="cover" src={ item.cover } alt={ item.title } />
+                        <div className="cover" style={{ backgroundImage: `url(${ item.cover })` }} alt={ item.title }></div>
                         <p className="detail">{ item.detail }</p>
                         <p className="info">Posted by XXX on { item.date }</p>
                       </Link>
@@ -59,14 +84,14 @@ class Home extends Component {
                   )
                 }) }
               </ul>
-              <Pagination defaultCurrent={1} total={50} />
+              <Pagination onChange={this.pageChange.bind(this)} defaultCurrent={this.state.current} total={this.state.total} />
             </Col>
             <Col span={6}>
               <Divider />
               <h2>美食标签</h2>
               <div className="tags-wrap">
                 { this.state.tags.map((item, index) => {
-                  return <Link key={ item.id } to={`/${ item.id }`}><Badge count={ item.title } /></Link>
+                  return <Link key={ item._id } to={`/${ item._id }`}><Badge count={ item.title } /></Link>
                 }) }
               </div>
               <Divider />

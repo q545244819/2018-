@@ -27,10 +27,12 @@
 
 .Home .cover {
   margin-bottom: 10px;
-  display: block;
   width: 100%;
   height: 200px;
   border-radius: 5px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
 }
 
 .Home .list p.detail {
