@@ -2,17 +2,11 @@ const Admin = require('../models/admin')
 
 class AdminRoute {
   static async index(request, reply) {
-    if (!request.session.user) {
-      reply.code(301).redirect('/admin/login')
-
-      return
-    }
-
     reply.view('/server/views/index.ejs')
   }
 
   static async login(request, reply) {
-    reply.view('/server/views/login.ejs')
+    reply.setCookie('authorization', '').view('/server/views/login.ejs')
   }
 
   static async signin(request, reply) {
@@ -20,38 +14,41 @@ class AdminRoute {
       const body = request.body
       const have = await Admin.findOne()
       const user = await Admin.findOne(body)
+      let jwt = ''
 
       if (!have) {
         await (new Admin(body)).save()
+
+        jwt = await reply.jwtSign({
+          username: body.username,
+        })
+
+        reply.setCookie('authorization', `Bearer ${ jwt }`)
+          .code(301)
+          .redirect('/admin')
       } else if (!user) {
         reply.code(301).redirect('/admin/login')
       } else {
-        request.session.user = user
+        jwt = await reply.jwtSign({
+          id: user.get('_id'),
+          username: user.get('username'),
+        })
 
-        reply.code(301).redirect('/admin')
+        reply.setCookie('authorization', `Bearer ${ jwt }`)
+          .code(301)
+          .redirect('/admin')
       }
     } catch(e) {
+      console.log(e)
       reply.code(301).redirect('/admin/login')
     }
   }
 
-  static async tags(request, reply) {
-    if (!request.session.user) {
-      reply.code(301).redirect('/admin/login')
-
-      return
-    }
-    
+  static async tags(request, reply) {    
     reply.view('/server/views/tags.ejs')
   }
   
   static async article(request, reply) {
-    if (!request.session.user) {
-      reply.code(301).redirect('/admin/login')
-
-      return
-    }
-
     reply.view('/server/views/article.ejs', { id: request.params.id })
   }
 }

@@ -14,9 +14,10 @@
       </div>
       <div class="container">
         <ul class="nav navbar-nav">
-            <li><a href="/admin">文章</a></li>
-            <li class="active"><a href="/admin/tags">标签</a></li>
-            <li><a href="#">相册</a></li>
+          <li><a href="/admin">文章</a></li>
+          <li class="active"><a href="/admin/tags">标签</a></li>
+          <li><a href="#">相册</a></li>
+          <li><a href="/admin/login">登出</a></li>            
         </ul>
       </div>
     </nav>
@@ -57,9 +58,12 @@
       </table>
     </div>
 
+    <script src="https://cdn.bootcss.com/js-cookie/latest/js.cookie.min.js"></script>    
     <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
     <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.min.js"></script>
     <script>
+      axios.defaults.headers.common['authorization'] = Cookies.get('authorization')
+      
       new Vue({
         el: '#app',
         data: {
