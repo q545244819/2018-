@@ -12,6 +12,7 @@
     "fastify-cookie": "^2.0.1",
     "fastify-formbody": "^2.0.0",
     "fastify-jwt": "^0.3.0",
+    "fastify-static": "^0.11.0",
     "imagesloaded": "^4.1.4",
     "masonry-layout": "^4.2.1",
     "mongorito": "^3.0.4",
@@ -26,9 +27,18 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "dev": "nodemon ./server/app.js"
+    "dev": "nodemon ./dist/server/app.js",
+    "build:server": "gulp build",
+    "watch:server": "gulp"
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-plumber": "^1.2.0",
+    "gulp-replace": "^0.6.1",
+    "gulp-sourcemaps": "^2.6.4",
     "nodemon": "^1.17.4"
   },
   "nodemonConfig": {

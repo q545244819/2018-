@@ -6,10 +6,10 @@ import { getArticle } from '../../services/article'
 import './index.css'
 
 class Home extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
-    this.state = {
+    const defaultState = {
       article: {
         id: '',
         title: '',
@@ -19,15 +19,23 @@ class Home extends Component {
         tags: [],
       },
     }
+
+    if (typeof window === 'object') {
+      this.state = defaultState
+    } else {
+      this.state = this.props.data
+    }
   }
 
   componentWillMount() {
-    getArticle({ id: this.props.match.params.id })
-      .then(({ data }) => {
-        this.setState({
-          article: data,
+    if (!this.props.data && this.props.match) {
+      getArticle({ id: this.props.match.params.id })
+        .then(({ data }) => {
+          this.setState({
+            article: data,
+          })
         })
-      })
+    }
   }
 
   render() {

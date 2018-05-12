@@ -1,30 +1,39 @@
 import React, { Component } from 'react'
-import Masonry from 'masonry-layout'
-import imagesLoaded from 'imagesloaded'
 
 import { getCovers } from '../../services/article'
 
 import './index.css'
 
 class Home extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
-    this.state = {
+    const defaultState = {
       photos: []
+    }
+
+    if (typeof window === 'object') {
+      this.state = defaultState
+    } else {
+      this.state = this.props.data
     }
   }
 
   componentWillMount() {
-    getCovers()
-      .then(({ data }) => {
-        this.setState({
-          photos: data,
+    if (!this.props.data) {
+      getCovers()
+        .then(({ data }) => {
+          this.setState({
+            photos: data,
+          })
         })
-      })
+    }
   }
 
   componentDidMount() {
+    const Masonry = require('masonry-layout')
+    const imagesLoaded = require('imagesloaded')
+
     imagesLoaded(document.querySelectorAll('.grid-item'), function() {
       new Masonry(document.querySelector('.grid'), {
         itemSelector: '.grid-item',

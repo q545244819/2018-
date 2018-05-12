@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 require('dotenv').config()
 
 const fastify = require('fastify')()
@@ -5,10 +7,13 @@ const ejs = require('ejs')
 const pointOfView = require('point-of-view')
 const fastifyJwt = require('fastify-jwt')
 const fastifyCookie = require('fastify-cookie')
+const fastifyStatic = require('fastify-static')
+const path = require('path')
 
 const db = require('./db')
 const articleRoute = require('./routes/article')
 const tagRoute = require('./routes/tag')
+const ssrRoute = require('./routes/ssr')
 const adminRoute = require('./routes/admin')
 const articleSchema = require('./schemas/article')
 const tagSchema = require('./schemas/tag')
@@ -28,6 +33,17 @@ fastify.register(pointOfView, {
     ejs,
   }
 })
+fastify.register(fastifyStatic, {
+  root: path.join(__dirname, '../../build'),
+  send: {
+    index: false,
+  },
+})
+
+fastify.get('/', ssrRoute.home)
+fastify.get('/album', ssrRoute.album)
+fastify.get('/about', ssrRoute.about)
+fastify.get('/article/:id', ssrRoute.article)
 
 fastify.get(`${ routeAdmin }`, { beforeHandler: auth }, adminRoute.index)
 fastify.get(`${ routeAdmin }/login`, adminRoute.login)
@@ -51,6 +67,8 @@ fastify.delete(`${ routeTag }/:id`, { schema: tagSchema.delete, beforeHandler: a
 
 const start = async () => {
   try {
+    axios.defaults.baseURL = 'http://127.0.0.1:3001'
+
     await db.connect()
     await fastify.listen(process.env.PORT)
   } catch (err) {

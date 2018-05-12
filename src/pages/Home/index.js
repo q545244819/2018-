@@ -6,20 +6,25 @@ import queryString from 'query-string'
 import { getArticles } from '../../services/article'
 import { getTag } from '../../services/tag'
 
-
 import './index.css'
 
 class Home extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
-    this.state = {
+    const defaultState = {
       list: [],
       tags: [],
       tagsMap: {},
       current: 1,
       total: 0,
       tag: '',
+    }
+
+    if (typeof window === 'object') {
+      this.state = defaultState
+    } else {
+      this.state = this.props.data
     }
   }
 
@@ -61,7 +66,9 @@ class Home extends Component {
   }
 
   componentWillMount() {
-    this.load()
+    if (!this.props.data) {
+      this.load()
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
