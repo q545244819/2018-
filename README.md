@@ -35,10 +35,12 @@ npm run build:server // 打包后端应用
 ### .env 文件配置
 
 ```
-DB_HOST=localhost
+DB_HOST=localhost:27017
 DB_USER=root
 DB_PASS=
+SERVER_HOST=127.0.0.1
 PORT=3001
+SECRET=
 ```
 
 ## 部署应用
