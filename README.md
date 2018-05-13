@@ -38,7 +38,9 @@ npm run build:server // 打包后端应用
 DB_HOST=localhost
 DB_USER=root
 DB_PASS=
+HOST=0.0.0.0
 PORT=3001
+SECRET=
 ```
 
 ## 部署应用

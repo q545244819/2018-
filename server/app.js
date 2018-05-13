@@ -68,10 +68,10 @@ fastify.delete(`${ routeTag }/:id`, { schema: tagSchema.delete, beforeHandler: a
 const start = async () => {
   try {
     // SSR 使用
-    axios.defaults.baseURL = `http://localhost:${ process.env.PORT }`
+    axios.defaults.baseURL = `http://${process.env.SERVER_HOST}:${ process.env.PORT }`
 
     await db.connect()
-    await fastify.listen(process.env.PORT)
+    await fastify.listen(process.env.PORT, process.env.SERVER_HOST)
   } catch (err) {
     fastify.log.error(err)
     process.exit(1)
