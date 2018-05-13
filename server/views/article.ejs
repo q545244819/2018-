@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>admin</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      #editor {
+        margin-bottom: 20px;
+      }
+
+      .tag {
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">后台管理系统</a>
+      </div>
+      <div class="container">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/admin">文章</a></li>
+          <li><a href="/admin/tags">标签</a></li>
+          <li><a href="#">相册</a></li>
+          <li><a href="/admin/login">登出</a></li>          
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container" id="app">
+      <div>
+        <div class="form-group">
+          <label for="title">标题</label>
+          <input type="text" class="form-control" id="title" v-model="title">
+        </div>
+        <div class="form-group">
+          <label for="cover">封面</label>
+          <input type="text" class="form-control" id="cover" v-model="cover">
+        </div>
+        <div class="form-group">
+          <label>标签</label>
+          <button v-for="item in tags" class="btn tag" v-bind:class="{ 'btn-info': !item.selected, 'btn-primary': item.selected }" v-text="item.title" @click="addTag(item)"></button>
+        </div>
+        <div id="editor">
+        </div>
+        <button type="button" class="btn btn-default" v-bind:disabled="disabled" @click="save">提交</button>
+      </div>
+    </div>
+
+    <script src="https://cdn.bootcss.com/js-cookie/latest/js.cookie.min.js"></script>
+    <script src="//unpkg.com/wangeditor/release/wangEditor.min.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.min.js"></script>
+    <script>
+      axios.defaults.headers.common['authorization'] = Cookies.get('authorization')
+
+      new Vue({
+        el: '#app',
+        data: {
+          title: '',
+          cover: '',
+          id: '<%= id %>',
+          disabled: false,
+          tags: [],
+          selectTags: new Set(),
+          editor: null,
+        },
+        methods: {
+          addTag(tag) {
+            tag.selected = !tag.selected
+
+            this.selectTags.add(tag._id)
+          },
+          save() {
+            if (!this.title) {
+              return
+            }
+
+            if (!this.cover) {
+              return
+            }
+
+            if (!this.editor.txt.text()) {
+              return
+            }
+
+            const data = {
+              title: this.title,
+              cover: this.cover,
+              content: this.editor.txt.html(),
+              tags: [...this.selectTags],
+            }
+
+            this.disabled = true
+
+            ;(this.id ? axios.put(`/api/article/${this.id}`, data) : axios.post('/api/article', data))
+              .then(({ data }) => {
+                this.disabled = false
+
+                window.location = '/admin'
+              })
+              .catch(() => {
+                this.disabled = false
+              })
+          },
+          load() {
+            this.editor = new wangEditor('#editor')
+            this.editor.create()
+
+            if (this.id) {
+              axios.get(`/api/article/${ this.id }`)
+                .then(({ data }) => {
+                  this.title = data.title
+                  this.cover = data.cover
+
+                  this.editor.txt.html(data.content)
+                })
+            }
+
+            axios.get('/api/tag')
+              .then(({ data }) => {
+                this.tags = data.map((item) => {
+                  item.selected = false
+                  
+                  return item
+                })
+              })
+          }
+        },
+        mounted() {
+          this.load()
+        },
+      })
+    </script>
+  </body>
+</html>

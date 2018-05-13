@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>admin</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">后台管理系统</a>
+      </div>
+      <div class="container">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/admin">文章</a></li>
+          <li><a href="/admin/tags">标签</a></li>
+          <li><a href="#">相册</a></li>
+          <li><a href="/admin/login">登出</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container" id="app">
+      <a href="/admin/create" class="btn btn-primary">创建新文章</a>
+      <hr>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>标题</th>
+            <th>标签</th>
+            <th>发布日期</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, key) in list" :key="key">
+            <td v-text="item.title"></td>
+            <td>
+              <a v-for="item in item.tags" class="btn btn-primary" v-text="item.title"></a>
+            </td>
+            <td v-text="item.created_at"></td>
+            <td>
+              <a :href="`/admin/update/${ item._id }`" class="btn btn-info">编辑</a>
+              <button type="button" class="btn btn-danger" @click="remove(item._id)">删除</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <nav aria-label="Page navigation">
+        <ul class="pagination">
+          <li v-for="item in total" v-bind:class="{ active: item === page }">
+            <a v-text="item" @click="load(item)"></a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <script src="https://cdn.bootcss.com/js-cookie/latest/js.cookie.min.js"></script>    
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.min.js"></script>
+    <script>
+      axios.defaults.headers.common['authorization'] = Cookies.get('authorization')
+      
+      new Vue({
+        el: '#app',
+        data: {
+          list: [],
+          page: 0,
+          total: 0,
+        },
+        methods: {
+          load(page) {
+            this.page = page
+
+            axios.get('/api/article', { params: { page: this.page } })
+              .then(({ data }) => {
+                this.total = data.count > 10 ? data.count % 10 : 1
+                this.list = data.list
+              })
+          },
+          remove(id) {
+            if (confirm('是否删除此文章？')) {
+              axios.delete(`/api/article/${ id }`)
+                .then(({ data }) => {
+                  this.load(1)
+                })
+            }
+          }
+        },
+        mounted() {
+          this.load(1)
+        },
+      })
+    </script>
+  </body>
+</html>
